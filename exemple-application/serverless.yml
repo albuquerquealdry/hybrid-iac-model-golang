@@ -1,0 +1,24 @@
+service: booking-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage: dev
+  region: us-east-1
+
+package:
+  patterns:
+    - '!./**'
+    - ./bin/**
+
+functions:
+  register:
+    environment:
+      VARIABLE_DEFAULT: ${ssm:research_variable}
+    handler: bin/register
+    role:  ${ssm:research_variable} 
+    events:
+      - httpApi:
+          path: /users
+          method: post
